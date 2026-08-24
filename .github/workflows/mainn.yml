@@ -1,0 +1,32 @@
+name: Check ZIP
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show files
+        run: |
+          echo "=== Repository ==="
+          find . -maxdepth 2 -type f -print
+
+      - name: Unzip
+        run: |
+          ZIP=$(find . -type f -iname "*.zip" | head -n 1)
+          echo "ZIP found: $ZIP"
+
+          if [ -z "$ZIP" ]; then
+            echo "NO ZIP FOUND"
+            exit 1
+          fi
+
+          mkdir -p extracted
+          unzip -o "$ZIP" -d extracted
+
+          echo "=== Extracted ==="
+          find extracted -maxdepth 3 -type f -print
