@@ -1,32 +1,45 @@
-name: Check ZIP
+name: Unzip ZIP to Repository
 
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
-  check:
+  unzip:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Show files
+      - name: Unzip project
         run: |
-          echo "=== Repository ==="
-          find . -maxdepth 2 -type f -print
-
-      - name: Unzip
-        run: |
-          ZIP=$(find . -type f -iname "*.zip" | head -n 1)
-          echo "ZIP found: $ZIP"
+          ZIP=$(find . -maxdepth 1 -type f -iname "*.zip" | head -n 1)
 
           if [ -z "$ZIP" ]; then
-            echo "NO ZIP FOUND"
+            echo "No ZIP file found"
             exit 1
           fi
 
-          mkdir -p extracted
+          mkdir extracted
           unzip -o "$ZIP" -d extracted
 
-          echo "=== Extracted ==="
-          find extracted -maxdepth 3 -type f -print
+      - name: Copy project to repository
+        run: |
+          cp -r extracted/SSDAC_Analyzer/* .
+          cp -r extracted/SSDAC_Analyzer/.[!.]* . 2>/dev/null || true
+
+      - name: Remove ZIP
+        run: |
+          rm -f ./*.zip
+
+      - name: Commit files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add .
+          git commit -m "Extract SSDAC Analyzer project"
+          git push
