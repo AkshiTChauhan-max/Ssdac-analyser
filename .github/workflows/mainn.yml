@@ -1,4 +1,4 @@
-name: Unzip ZIP to Repository
+name: Extract Project
 
 on:
   workflow_dispatch:
@@ -7,39 +7,52 @@ permissions:
   contents: write
 
 jobs:
-  unzip:
+  extract:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Unzip project
+      - name: Extract ZIP
         run: |
           ZIP=$(find . -maxdepth 1 -type f -iname "*.zip" | head -n 1)
 
-          if [ -z "$ZIP" ]; then
-            echo "No ZIP file found"
-            exit 1
-          fi
+          echo "ZIP = $ZIP"
 
+          rm -rf extracted
           mkdir extracted
+
           unzip -o "$ZIP" -d extracted
 
-      - name: Copy project to repository
+      - name: Copy project to root
         run: |
-          cp -r extracted/SSDAC_Analyzer/* .
-          cp -r extracted/SSDAC_Analyzer/.[!.]* . 2>/dev/null || true
+          rsync -av \
+            extracted/SSDAC_Analyzer/ \
+            ./ \
+            --exclude='.git'
 
-      - name: Remove ZIP
+      - name: Remove ZIP and temporary files
         run: |
           rm -f ./*.zip
+          rm -rf extracted
 
-      - name: Commit files
+      - name: Check files
+        run: |
+          echo "=== ROOT ==="
+          ls -la
+          echo "=== APP ==="
+          ls -la app || true
+
+      - name: Commit and Push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add .
-          git commit -m "Extract SSDAC Analyzer project"
+          git add -A -f
+
+          git status
+
+          git commit -m "Extract SSDAC Analyzer project" || echo "Nothing to commit"
+
           git push
