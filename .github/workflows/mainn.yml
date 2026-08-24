@@ -5,7 +5,6 @@ on:
 
 permissions:
   contents: write
-  workflows: write
 
 jobs:
   extract:
@@ -17,43 +16,22 @@ jobs:
 
       - name: Extract ZIP
         run: |
-          ZIP=$(find . -maxdepth 1 -type f -iname "*.zip" | head -n 1)
+          ZIP=$(find . -maxdepth 1 -type f -name "*.zip" | head -n 1)
+          echo "Found ZIP: $ZIP"
 
-          echo "ZIP = $ZIP"
+          mkdir -p temp
+          unzip -o "$ZIP" -d temp
 
-          rm -rf extracted
-          mkdir extracted
-
-          unzip -o "$ZIP" -d extracted
-
-      - name: Copy project to root
+      - name: Copy project
         run: |
-          rsync -av \
-            extracted/SSDAC_Analyzer/ \
-            ./ \
-            --exclude='.git'
-
-      - name: Remove ZIP and temporary files
-        run: |
+          cp -a temp/SSDAC_Analyzer/. .
+          rm -rf temp
           rm -f ./*.zip
-          rm -rf extracted
 
-      - name: Check files
-        run: |
-          echo "=== ROOT ==="
-          ls -la
-          echo "=== APP ==="
-          ls -la app || true
-
-      - name: Commit and Push
+      - name: Commit files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add -A -f
-
-          git status
-
-          git commit -m "Extract SSDAC Analyzer project" || echo "Nothing to commit"
-
+          git add -A
+          git commit -m "Extract Android project" || true
           git push
