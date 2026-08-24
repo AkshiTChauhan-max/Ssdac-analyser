@@ -20,24 +20,24 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Setup Gradle
+      - name: Setup Gradle 8.2
         uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.2'
 
       - name: Build Debug APK
-        run: |
-          gradle assembleDebug --stacktrace --info
+        run: gradle assembleDebug --stacktrace
 
-      - name: Find APK
-        if: always()
+      - name: Show APK
+        if: success()
         run: |
-          echo "Searching for APK..."
-          find . -type f -name "*.apk" -print
+          echo "APK files:"
+          find app/build/outputs -type f -name "*.apk" -print
 
       - name: Upload APK
         if: success()
         uses: actions/upload-artifact@v4
         with:
           name: SSDAC-Analyzer-APK
-          path: |
-            app/build/outputs/apk/debug/*.apk
+          path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
