@@ -11,8 +11,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout MAIN branch
         uses: actions/checkout@v4
+        with:
+          ref: main
+          clean: true
+          fetch-depth: 0
+
+      - name: Verify source
+        run: |
+          echo "=== COMMIT ==="
+          git rev-parse HEAD
+
+          echo "=== MainActivity ==="
+          wc -l app/src/main/java/com/cel/ssdac/MainActivity.java
+
+          echo "=== registerUsbReceiver ==="
+          grep -n "registerUsbReceiver" app/src/main/java/com/cel/ssdac/MainActivity.java
+
+          echo "=== Git status ==="
+          git status
 
       - name: Setup Java 17
         uses: actions/setup-java@v4
@@ -26,12 +44,11 @@ jobs:
           gradle-version: '8.2'
 
       - name: Build Debug APK
-        run: gradle assembleDebug --stacktrace
+        run: gradle clean assembleDebug --stacktrace
 
-      - name: Show APK
+      - name: Find APK
         if: success()
         run: |
-          echo "APK files:"
           find app/build/outputs -type f -name "*.apk" -print
 
       - name: Upload APK
