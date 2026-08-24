@@ -17,21 +17,34 @@ jobs:
       - name: Extract ZIP
         run: |
           ZIP=$(find . -maxdepth 1 -type f -name "*.zip" | head -n 1)
+
           echo "Found ZIP: $ZIP"
 
-          mkdir -p temp
+          rm -rf temp
+          mkdir temp
+
           unzip -o "$ZIP" -d temp
 
-      - name: Copy project
+      - name: Copy Android project
         run: |
-          cp -a temp/SSDAC_Analyzer/. .
-          rm -rf temp
+          cp -a temp/SSDAC_Analyzer/app .
+          cp -a temp/SSDAC_Analyzer/gradle .
+          cp -a temp/SSDAC_Analyzer/build.gradle .
+          cp -a temp/SSDAC_Analyzer/settings.gradle .
+          cp -a temp/SSDAC_Analyzer/README.md . 2>/dev/null || true
+
+      - name: Remove ZIP
+        run: |
           rm -f ./*.zip
+          rm -rf temp
 
       - name: Commit files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           git add -A
+
           git commit -m "Extract Android project" || true
+
           git push
