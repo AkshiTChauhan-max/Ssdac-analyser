@@ -445,10 +445,16 @@ public class MainActivity extends AppCompatActivity
     };
 
     private void registerUsbReceiver() {
-        IntentFilter f = new IntentFilter();
-        f.addAction(ACTION_USB_PERMISSION);
-        f.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
+    IntentFilter f = new IntentFilter();
+    f.addAction(ACTION_USB_PERMISSION);
+    f.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        registerReceiver(usbReceiver, f, Context.RECEIVER_NOT_EXPORTED);
+    } else {
         registerReceiver(usbReceiver, f);
+    }
+}
     }
 
     // ════════════════ HELPERS ════════════════
