@@ -455,7 +455,6 @@ public class MainActivity extends AppCompatActivity
         registerReceiver(usbReceiver, f);
     }
 }
-    }
 
     // ════════════════ HELPERS ════════════════
     private void requestStoragePermission() {
