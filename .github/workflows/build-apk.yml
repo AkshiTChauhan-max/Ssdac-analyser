@@ -11,22 +11,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout current main
+      - name: Checkout MAIN
         uses: actions/checkout@v4
         with:
           ref: main
           clean: true
           fetch-depth: 1
 
-      - name: Verify source
+      - name: VERIFY SOURCE
         run: |
           echo "===== COMMIT ====="
           git rev-parse HEAD
-
-          echo "===== MAIN ACTIVITY ====="
+          echo "===== FILE ====="
           wc -l app/src/main/java/com/cel/ssdac/MainActivity.java
-
-          echo "===== LINE 461 ====="
+          echo "===== LINES 455-470 ====="
           sed -n '455,470p' app/src/main/java/com/cel/ssdac/MainActivity.java
 
       - name: Setup Java 17
@@ -43,7 +41,7 @@ jobs:
       - name: Build Debug APK
         run: gradle clean assembleDebug --stacktrace
 
-      - name: Find APK
+      - name: Show APK
         if: success()
         run: |
           find app/build/outputs -type f -name "*.apk" -print
