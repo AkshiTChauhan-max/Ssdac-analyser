@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#1A1A2E">
+
+    <!-- STATUS BAR -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="#0F3460"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SSDAC Analyzer"
+                android:textColor="#00D4FF"
+                android:textSize="15sp"
+                android:textStyle="bold"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="by Akshit Chauhan  v1.0"
+                android:textColor="#6699AA"
+                android:textSize="10sp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🔌 Disconnected"
+            android:textColor="#FFB800"
+            android:textSize="11sp"/>
+    </LinearLayout>
+
+    <!-- BAUD + CONNECT -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="#16213E"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Baud:"
+            android:textColor="#AAAAAA"
+            android:textSize="12sp"
+            android:paddingEnd="6dp"/>
+
+        <Spinner
+            android:id="@+id/sp_baud_rate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#00D4FF"/>
+
+        <Button
+            android:id="@+id/btn_connect"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:layout_marginStart="8dp"
+            android:text="CONNECT"
+            android:textSize="11sp"
+            android:backgroundTint="#00D4FF"
+            android:textColor="#000000"/>
+    </LinearLayout>
+
+    <!-- COMMAND BUTTONS -->
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:padding="4dp">
+
+        <Button
+            android:id="@+id/btn_download"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_columnWeight="1"
+            android:layout_margin="3dp"
+            android:text="⬇ DOWNLOAD"
+            android:textSize="12sp"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#0077B6"/>
+
+        <Button
+            android:id="@+id/btn_get_time"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_columnWeight="1"
+            android:layout_margin="3dp"
+            android:text="🕐 GET RTC"
+            android:textSize="12sp"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#2D6A4F"/>
+
+        <Button
+            android:id="@+id/btn_set_time"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_columnWeight="1"
+            android:layout_margin="3dp"
+            android:text="⏱ SET RTC"
+            android:textSize="12sp"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#495057"/>
+
+        <Button
+            android:id="@+id/btn_erase"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_columnWeight="1"
+            android:layout_margin="3dp"
+            android:text="🗑 ERASE"
+            android:textSize="12sp"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#C9184A"/>
+    </GridLayout>
+
+    <!-- OPEN .DAT FILE -->
+    <Button
+        android:id="@+id/btn_open_file"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginTop="2dp"
+        android:text="📂  OPEN .DAT FILE  (analyze saved data)"
+        android:textSize="12sp"
+        android:textColor="#00D4FF"
+        android:backgroundTint="#0D0D1E"
+        android:strokeColor="#00D4FF"/>
+
+    <!-- PROGRESS -->
+    <ProgressBar
+        android:id="@+id/pb_download"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_marginTop="4dp"
+        android:indeterminate="true"
+        android:indeterminateTint="#00D4FF"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tv_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="#00D4FF"
+        android:textSize="11sp"
+        android:visibility="gone"/>
+
+    <!-- LOG LABEL -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="  LOG / DATA OUTPUT"
+        android:textColor="#666688"
+        android:textSize="10sp"
+        android:paddingTop="4dp"
+        android:paddingBottom="2dp"/>
+
+    <!-- LOG AREA -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#080810">
+        <TextView
+            android:id="@+id/tv_log"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#00FF88"
+            android:textSize="10.5sp"
+            android:fontFamily="monospace"
+            android:padding="8dp"
+            android:scrollbars="vertical"/>
+    </ScrollView>
+
+</LinearLayout>

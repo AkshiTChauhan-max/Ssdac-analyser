@@ -1,0 +1,2 @@
+rootProject.name = "SSDAC_Analyzer"
+include ':app'
